@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 1 */
+        .tab{
+            display: inline-block;
+            padding: 10px;
+            margin-left: -4px;
+            background-color: lightgray;
+            cursor: pointer;
+            padding-left: 11px;
+        }
+        .tab.active{
+            background-color: gray;
+        }
+        .content{
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            width: 400px
+        }
+        .content.active{
+            display: block;
+        }
+        .full{
+            width: 420px;
+            border: 1px solid gray;
+            padding-left: 4px;
+        }
+
+        /* 2 */
+        #modal{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(64, 255, 175, 0.5);
+            z-index: 9999;
+            /* rgba(0, 0, 0, 0.5) */
+        }
+        #modalContent{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid rgb(0, 245, 0);
+            text-align: center;
+        }
+        #closeModal{
+            margin-top: 20px;
+        }
+
+        /* 4 */
+        #chartForm {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .chart-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-width: 500px;
+            margin: 10px auto;
+        }
+
+        .bar {
+            background-color: #4CAF50;
+            height: 30px;
+            margin-bottom: 5px;
+            color: #fff;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .chart-value {
+            float: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<!-- 1 -->
+<h2>Задание 1</h2>
+<div class="full">
+    <div class="tabs">
+        <div class="tab">Mango</div>   
+        <div class="tab">Orange</div>
+        <div class="tab">Pineapple</div>
+        <div class="tab">Papaya</div>
+        <div class="tab">Grapefruit</div>
+        <div class="tab">Pear</div>
+    </div>
+
+    <div class="tab-content">
+        <div class="content"><b>Mango</b><br>Mangoes are as diverse as apples or plums. There are hundreds and hundreds of varieties of mango, regional and distinct.</div>
+        <div class="content"><b>Orange</b><br>Orange zest is not only flavorful, it's also rich in antioxidants!</div>
+        <div class="content"><b>Pineapple</b><br>Pineapples are a cluster of hundreds of fruitlets. Pineapples take about 18-20 months to become ready to harvest. Pineapples are native to South America before Christopher Columbus discovered them in 1493. Pineapple is the only edible fruit of its kind, the Bromeliads.</div>
+        <div class="content"><b>Papaya</b><br>Papayas are known to help with digestion. The black seeds in the center of a papaya are edible and have a spicy, peppery taste. Florida and Hawaii are the only US states that grow papaya. Papaya contains an enzyme, papain, that can be used as a meat tenderizer.</div>
+        <div class="content"><b>Grapefruit</b><br>Grapefruits are packed with vitamin C and fiber. One half of a grapefruit contains 6 grams of fiber and the total daily amount of vitamin C your body needs. Grapefruit was originally called “the forbidden fruit.” • Jamaicans coined the term “grapefruit” because the fruit grew in bunches like grapes.</div>
+        <div class="content"><b>Pear</b><br>Pears grow on trees that can live to be 100 years old. They do not ripen while on the tree but ripen from the inside out. Pears are a good source of vitamin C, potassium and high in fiber. There are more than 3,000 varieties of pears but the most common are Bartlett, Anjou, Bosc and Comice pears.</div>
+    </div>
+</div>
+
+<!-- 2 -->
+<h2>Задание 2</h2>
+<button id="openModal">Open modal</button>
+<div id="modal">
+    <div id="modalContent">Hello from modal Window!<br>
+        <button id="closeModal">Close</button>
+    </div>
+</div>
+
+<!-- 3 -->
+<h2>Задание 3</h2>
+<form>
+    <div class="ui-widget">
+        <label for="automplete-1">Laguage: </label>
+        <input id="automplete-1">
+    </div>
+</form>
+
+<!-- 4 -->
+<h2>Задание 4</h2>
+<div id="chartForm">
+    <form id="chartDataForm">
+        <label for="chartHeader">Заголовок графика:</label>
+        <input type="text" id="chartHeader" required><br>
+        <label for="maxValue">Максимальное значение:</label>
+        <input type="number" id="maxValue" required><br>
+        <label for="dataTitle">Подпись элемента:</label>
+        <input type="text" id="dataTitle" required><br>
+        <label for="dataValue">Значение элемента:</label>
+        <input type="number" id="dataValue" required><br><br>
+        <button type="button" id="addData">Добавить элемент</button>
+        <button type="submit">Построить график</button>
+    </form>
+</div>
+
+<div id="chartsContainer"></div>
+
+
+
+
+
+<script>
+// 1
+$(document).ready(function(){
+    $(".tab:first").addClass("active");
+    $(".content:first").addClass("active");
+
+    $(".tab").click(function(){
+        $(".tab").removeClass("active");
+        $(".content").removeClass("active");
+
+        $(this).addClass("active");
+        $(".content").eq($(this).index()).addClass("active");
+    });
+})
+
+
+// 2
+$(document).ready(function(){
+    $('#openModal').click(function(){
+        $('#modal').fadeIn('fast');
+    });
+    $('#closeModal').click(function(){
+        $('#modal').fadeOut('fast');
+    });
+})
+
+
+// 3
+$(function() {
+    var programmersLanguage = [ 'Javascript', 'Python', 'Go', 'Java', 'Kotlin', 'PHP', 'C#', 'Swift', 'R', 'Ruby', 'C', 'C++', 'Matlab', 'TypeScript', 'Scala', 'SQL', 'HTML', 'CSS', 'NoSQL', 'Rust', 'Perl'];
+    $( "#automplete-1" ).autocomplete({
+        source: programmersLanguage
+    });
+});
+
+//4
+function drawChart(data) {
+    const chartContainer = $("<div>").addClass("chart-container");
+    const chartHeader = $("<h3>").text(data.header);
+    const chartValue = $("<div>").addClass("chart-value").text(data.maxvalue);
+    const chartBars = $("<div>").addClass("chart-bars");
+
+    const maxValue = data.maxvalue;
+
+    data.data.forEach(item => {
+        const percentage = (item.value / maxValue) * 100;
+        const bar = $("<div>")
+        .addClass("bar")
+        .css("width", percentage + "%")
+        .attr("title", `${item.title}: ${item.value}`)
+        .text(item.value);
+        chartBars.append(bar);
+    });
+
+    chartContainer.append(chartHeader, chartValue, chartBars);
+    $("#chartsContainer").prepend(chartContainer);
+}
+
+$(document).ready(function () {
+    $("#chartDataForm").submit(function(event) {
+        event.preventDefault();
+
+        const header = $("#chartHeader").val();
+        const maxValue = parseInt($("#maxValue").val());
+        const dataTitle = $("#dataTitle").val();
+        const dataValue = parseInt($("#dataValue").val());
+
+        if (dataValue > maxValue) {
+            alert("Значение элемента не может превышать максимальное значение!");
+            return;
+        }
+
+        const data = {
+            header: header,
+            maxvalue: maxValue,
+            data: [{ title: dataTitle, value: dataValue }]
+        };
+
+        drawChart(data);
+        $("#chartDataForm")[0].reset();
+    });
+
+    $("#addData").click(function() {
+        const dataTitle = $("#dataTitle").val();
+        const dataValue = parseInt($("#dataValue").val());
+        const maxValue = parseInt($("#maxValue").val());
+
+        if (dataValue > maxValue) {
+            alert("Значение элемента не может превышать максимальное значение!");
+            return;
+        }
+
+        const data = { title: dataTitle, value: dataValue };
+        $("#chartDataForm")[0].reset();
+
+        const existingData = $("#chartData").val();
+        if (existingData) {
+            const parsedData = JSON.parse(existingData);
+            parsedData.push(data);
+            $("#chartData").val(JSON.stringify(parsedData));
+        } 
+        else {
+            $("#chartData").val(JSON.stringify([data]));
+        }
+    });
+});
+
+
+</script>
+</body>
+</html>
